@@ -1,22 +1,20 @@
 FROM ubuntu:trusty
 
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends python \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends python \
 		libx11-dev libxfixes-dev libxi-dev \
 		libxcb1-dev libx11-xcb-dev libxcb-glx0-dev \
 		libdbus-1-dev libxkbcommon-dev libxkbcommon-x11-dev \
 		binutils g++ make zlib1g-dev libssl-dev \
-		libgl1-mesa-dev xz-utils && \
+		libgl1-mesa-dev xz-utils curl && \
 		apt-get -y clean && rm -rf /var/cache/apt/* /var/lib/apt/lists/*
 ENV QT_MAJOR 5
 ENV QT_MINOR 9
 ENV QT_PATCH 1
 ENV QT_NAME qt-everywhere-opensource-src-${QT_MAJOR}.${QT_MINOR}.${QT_PATCH}
-RUN apt-get install -y --no-install-recommends curl && \
-	curl -O -L http://download.qt.io/official_releases/qt/${QT_MAJOR}.${QT_MINOR}/${QT_MAJOR}.${QT_MINOR}.${QT_PATCH}/single/${QT_NAME}.tar.xz && \
+RUN curl -O -L http://download.qt.io/official_releases/qt/${QT_MAJOR}.${QT_MINOR}/${QT_MAJOR}.${QT_MINOR}.${QT_PATCH}/single/${QT_NAME}.tar.xz && \
 	tar xJf ${QT_NAME}.tar.xz && \
 	rm ${QT_NAME}.tar.xz && \
-	apt-get autoremove -y curl && \
 	cd ${QT_NAME} && \
 	./configure -static -release -no-compile-examples -prefix /usr/local \
 		-opensource -confirm-license \
